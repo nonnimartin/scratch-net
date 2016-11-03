@@ -37,14 +37,13 @@ class network(object):
 
     def make_neurons(self):
 
-        total_hidden = (self.hidden_width * self.hidden_depth)
-        counter       = 0
+        #these should probably be refactored into discrete methods, but bear in mind the counter
 
+        counter       = 0
         #make input layer
         for neuron in range(self.input_depth):
             self.input_layer[counter] = u.neuron(counter, 0, [])
             counter += 1
-
         #make hidden units
         for layer in range(self.hidden_width):
             for neuron in range(self.hidden_depth):
@@ -57,21 +56,16 @@ class network(object):
         for unit in range(self.hidden_depth):
             self.out_afferents[rev_count-1] = self.hidden_units[rev_count-1]
             rev_count -= 1
-
-
         #make output layer
         for neuron in range(self.output_depth):
             self.output_layer[counter] = u.neuron(counter, self.hidden_width + 1, self.out_afferents)
             counter += 1
-        
         #merge dictionaries into an all_layers dictionary
         self.all_layers.update(self.input_layer)
         self.all_layers.update(self.hidden_units)
         self.all_layers.update(self.output_layer)
-
         #Add input layer to each neuron
         self.set_all_before_layers()
-
         #create weights
         self.create_weights()
 
