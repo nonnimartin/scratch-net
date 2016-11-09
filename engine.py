@@ -7,3 +7,4 @@ net.make_neurons()
 
 net.spread_activation()
 
+print net.net_as_dict()

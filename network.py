@@ -202,4 +202,12 @@ class network(object):
 
     def net_as_dict(self):
         #Returns dictionary representation of network
-        return self.__dict__
+        dic = self.__dict__
+        dic2 = dic
+        for key in dic:
+            if type(dic[key]) == dict:
+                for each in dic[key]:
+                    if str(type(dic[key][each])) == "<class 'unit.neuron'>":
+                        if dic[key][each] != 'inputs':
+                            dic2[key][each] = dic[key][each].__dict__
+        return dic2

@@ -6,10 +6,8 @@ class neuron(object):
 
         self.name           = name
         self.layer          = layer
-        self.inputs         = inputs
         self.activation     = 0
         self.before_layer   = []
-        self.weights        = []
 
 
     def set_before_layer(self, layer):
