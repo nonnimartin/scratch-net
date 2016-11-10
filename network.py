@@ -33,6 +33,7 @@ class network(object):
         self.output_layer  = {}
         self.out_afferents = {}
         self.connections   = {}
+        self.by_layer      = {}
 
 
     def make_neurons(self):
@@ -76,6 +77,20 @@ class network(object):
     def get_all_layers(self):
          return self.all_layers
 
+    def set_by_layers(self):
+        #maps neurons to layers in the following format {layer0: [neuron0, neuron1, neuron2], layer1: [etc...]}
+        layers_map = {}
+        neurons_list = []
+        for neuron in self.all_layers:
+            layer = self.all_layers[neuron].get_layer()
+            if layer not in layers_map:
+                layers_map[layer] = []
+                layers_map[layer].append(self.all_layers[neuron])
+            else:
+                layers_map[layer].append(self.all_layers[neuron])
+            
+        self.by_layer = layers_map
+
     def get_connections(self):
         return self.connections
 
@@ -116,6 +131,8 @@ class network(object):
             #iterate through before layer and create connections
                 for before_unit in inputs:
                     self.connections[before_unit, self.all_layers[neuron]] = random.random()
+            #add connections to unit property
+                    self.all_layers[neuron].add_connection(before_unit)
 
     def spread_activation(self):
         #Go through network and sum inputs on each neuron
@@ -194,14 +211,25 @@ class network(object):
         #Returns json representation of network
         return jsonpickle.encode(self)
 
+    def get_connections_by_neuron(self, neuron):
+        print neuron.get_before_layer()
+
     def net_as_dict(self):
-        #Returns dictionary representation of network
-        dic = self.__dict__
-        dic2 = dic
-        for key in dic:
-            if type(dic[key]) == dict:
-                for each in dic[key]:
-                    if str(type(dic[key][each])) == "<class 'unit.neuron'>":
-                        if dic[key][each] != 'inputs':
-                            dic2[key][each] = dic[key][each].__dict__
-        return dic2
+        dic = {}
+        dic['hidden_units'] = self.hidden_units
+        dic['input_units']  = self.input_layer
+        dic['output_units'] = self.output_layer
+        dic['connections']  = {}
+        
+        #convert connections tuples into neuron names and maps neurons with connection weights
+        for neuron in self.all_layers:
+            #dic['connections'][self.all_layers[neuron].get_name()]
+            name = self.all_layers[neuron].get_name()
+            dic['connections'][name] = self.all_layers[neuron].get_before_layer_names()
+
+        return dic
+
+
+
+
+

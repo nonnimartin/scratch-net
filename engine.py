@@ -7,4 +7,5 @@ net.make_neurons()
 
 net.spread_activation()
 
+#net.get_connections_by_neuron(net.get_neuron(3))
 print net.net_as_dict()
