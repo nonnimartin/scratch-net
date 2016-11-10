@@ -216,16 +216,27 @@ class network(object):
 
     def net_as_dict(self):
         dic = {}
-        dic['hidden_units'] = self.hidden_units
-        dic['input_units']  = self.input_layer
-        dic['output_units'] = self.output_layer
+        dic['hidden_units'] = {}
+        dic['input_units']  = {}
+        dic['output_units'] = {}
         dic['connections']  = {}
         
         #convert connections tuples into neuron names and maps neurons with connection weights
         for neuron in self.all_layers:
-            #dic['connections'][self.all_layers[neuron].get_name()]
             name = self.all_layers[neuron].get_name()
-            dic['connections'][name] = self.all_layers[neuron].get_before_layer_names()
+            dic['connections'][str(name)] = self.all_layers[neuron].get_before_layer_names()
+        
+        for neuron in self.hidden_units:
+            name = self.hidden_units[neuron].get_name()
+            dic['hidden_units'][str(name)] = str(self.hidden_units[neuron].get_activation())
+
+        for neuron in self.input_layer:
+            name = self.input_layer[neuron].get_name()
+            dic['input_units'][str(name)] = str(self.input_layer[neuron].get_activation())
+
+        for neuron in self.output_layer:
+            name = self.output_layer[neuron].get_name()
+            dic['output_units'][str(name)] = str(self.output_layer[neuron].get_activation())
 
         return dic
 
