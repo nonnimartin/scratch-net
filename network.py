@@ -239,15 +239,15 @@ class network(object):
 
         for neuron in self.hidden_units:
             name = self.hidden_units[neuron].get_name()
-            dic['hidden_units'][str(name)] = str(self.hidden_units[neuron].get_activation())
+            dic['hidden_units activation'][str(name)] = str(self.hidden_units[neuron].get_activation())
 
         for neuron in self.input_layer:
             name = self.input_layer[neuron].get_name()
-            dic['input_units'][str(name)] = str(self.input_layer[neuron].get_activation())
+            dic['input_units activation'][str(name)] = str(self.input_layer[neuron].get_activation())
 
         for neuron in self.output_layer:
             name = self.output_layer[neuron].get_name()
-            dic['output_units'][str(name)] = str(self.output_layer[neuron].get_activation())
+            dic['output_units activation'][str(name)] = str(self.output_layer[neuron].get_activation())
 
         string_dic = str(dic)
         json_from_dic = string_dic.replace("'", '"')
