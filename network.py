@@ -255,7 +255,9 @@ class network(object):
             name = self.output_layer[neuron].get_name()
             dic['output_units'][str(name)] = str(self.output_layer[neuron].get_activation())
 
-        return dic
+        string_dic = str(dic)
+        json_from_dic = string_dic.replace("'", '"')
+        return json_from_dic
 
 
 
