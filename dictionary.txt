@@ -1,1 +1,0 @@
-CREATE TABLE "companies_architectures" (id varchar(36) NOT NULL, product_version varchar(255), database_vendor varchar(255), operating_system varchar(255), number_of_scan_servers varchar(255), known_customizations varchar(255), company_id varchar(255), last_update datetime NOT NULL);
