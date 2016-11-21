@@ -1,6 +1,5 @@
 import unit as u
 import random
-import json
 
 class network(object):
 
