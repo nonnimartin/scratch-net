@@ -13,7 +13,7 @@ class neuron(object):
         self.connections_names  = []
 
     def set_before_layer(self, layer):
-        self.before_layer       = layer
+        self.before_layer = layer
         for unit in layer:
             self.before_layer_names.append(unit.get_name())
 

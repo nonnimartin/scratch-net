@@ -1,6 +1,6 @@
 import unit as u
 import random
-import jsonpickle
+import json
 
 class network(object):
 
@@ -226,14 +226,23 @@ class network(object):
         #convert connections tuples into neuron names and maps neurons with connection weights
         for neuron in self.all_layers:
             name = self.all_layers[neuron].get_name()
-            dic['connections'][str(name)] = self.all_layers[neuron].get_before_layer_names()
+            before = self.all_layers[neuron].get_before_layer()
+            temp_list = []
+            map_list  = []
+
+            for unit in before:
+                #make tuple from current and before neuron
+                pair = [unit,self.all_layers[neuron]]
+                tupe_pair = tuple(pair)
+                #place dictionaries here for later appending to single key
+                temp = {str(name) : {str(unit.get_name()) : str(self.get_connection_weight(tupe_pair))} }
+                temp_list.append(temp)
             
-            #!!!! ^ This is mapping connections to before layer, but that's not the pair that makes a connection
-            # for unit in dic['connections']:
-            #     if len(dic['connections'][unit]) != 0:
-            #         dic['connections'][unit] = self.get_connection_weight()
-                #dic['connections'][str(name)]['weight'] = self.get_connection_weight(())
-        
+            for mapping in temp_list:
+                map_list.append(mapping)
+            
+            dic['connections'][str(name)] = map_list
+
         for neuron in self.hidden_units:
             name = self.hidden_units[neuron].get_name()
             dic['hidden_units'][str(name)] = str(self.hidden_units[neuron].get_activation())
