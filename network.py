@@ -214,6 +214,8 @@ class network(object):
     def get_connections_by_neuron(self, neuron):
         print neuron.get_before_layer()
 
+    
+
     def net_as_dict(self):
         dic = {}
         dic['hidden_units'] = {}
@@ -225,6 +227,12 @@ class network(object):
         for neuron in self.all_layers:
             name = self.all_layers[neuron].get_name()
             dic['connections'][str(name)] = self.all_layers[neuron].get_before_layer_names()
+            
+            #!!!! ^ This is mapping connections to before layer, but that's not the pair that makes a connection
+            # for unit in dic['connections']:
+            #     if len(dic['connections'][unit]) != 0:
+            #         dic['connections'][unit] = self.get_connection_weight()
+                #dic['connections'][str(name)]['weight'] = self.get_connection_weight(())
         
         for neuron in self.hidden_units:
             name = self.hidden_units[neuron].get_name()
