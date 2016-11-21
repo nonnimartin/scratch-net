@@ -207,16 +207,10 @@ class network(object):
         print "=============="
         print ""
 
-    def net_as_json(self):
-        #Returns json representation of network
-        return jsonpickle.encode(self)
-
     def get_connections_by_neuron(self, neuron):
         print neuron.get_before_layer()
 
-    
-
-    def net_as_dict(self):
+    def net_as_json(self):
         dic = {}
         dic['hidden_units'] = {}
         dic['input_units']  = {}
