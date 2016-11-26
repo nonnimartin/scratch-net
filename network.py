@@ -252,6 +252,18 @@ class network(object):
         json_from_dic = string_dic.replace("'", '"')
         return json_from_dic
 
+    def send_to_inputs(self, inputs):
+        input_layer = self.input_layer
+        if len(inputs) != len(self.input_layer):
+            print "Number of inputs does not match input layer depth"
+            exit()
+        else:
+            for unit in input_layer:
+                #take data as list and set to values for input nodes
+                input_layer[unit].set_activation(inputs[unit])
+                
+            
+
 
 
 
