@@ -34,19 +34,39 @@ class training(object):
 
         connections = test_neuron.get_connections()
         #TEST_INPUTS 
-        print "connections = " + str(connections)
-        test_inputs      = []
 
-        #for each connection neuron, map => {neuron : [input_activation, weight]}
-        for neuron in connections:
-            weight_and_input[neuron] = [neuron.get_activation(), net.get_connection_weight((neuron, test_neuron))]
+        test_inputs      = [[0.4, 2.0], [0.5, 3.0]]
+
+        for connection in test_inputs:
+            summed += connection[0] * connection[1]
+            print "summed = " + str(summed)
+            error_slopes[str(connection)] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * test_inputs[0][0]
+
+        # for neuron in connections:
+        #     weight_and_input[neuron] = [neuron.get_activation(), net.get_connection_weight((neuron, test_neuron))]
 
         #sum inputs * weights
-        for connection in weight_and_input:
-            total = weight_and_input[connection][0] * weight_and_input[connection][1]
-            summed += total
-            error_slopes[connection] = -(test_error) * (self.sigmoid(total) * (1 - self.sigmoid(total))) * weight_and_input[connection][0]
+        # for connection in test_inputs:
+        #     print "connection = " + str(connection)
+        #     print "connection activation = " + str(connection[0])
+        #     print "connection weight = " + str(connection[1])
+        #     total = connection[0] * connection[1]
+        #     summed += total
+        #     total = 0
+        #     print "summed = " + str(summed)
+        #     print "connection input = " + str(connection[0])
+        #     error_slopes[str(connection)] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * connection[0]
         
+        #for each connection neuron, map => {neuron : [input_activation, weight]}
+        # for neuron in connections:
+        #     weight_and_input[neuron] = [neuron.get_activation(), net.get_connection_weight((neuron, test_neuron))]
+
+        # #sum inputs * weights
+        # for connection in weight_and_input:
+        #     total = weight_and_input[connection][0] * weight_and_input[connection][1]
+        #     summed += total
+        #     error_slopes[connection] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * weight_and_input[connection][0]
+        #     total = 0
         print "error slope = " + str(error_slopes)
 
     def sigmoid(self, input):
