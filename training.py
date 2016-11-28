@@ -23,63 +23,34 @@ class training(object):
             total += self.calculate_output_error(outputs[unit].get_activation(), target)
         return total
 
+    def derivative(self, output):
+        return output * (1 - output)
+
     def get_hidden_w_error(self):
         net = self.network
-        weight_and_input = {}
-        error_slopes     = {}
-        summed           = 0
-        test_neuron      = self.network.get_neuron(5)
-        #TEST ERROR - ultimately this will come from calculate_output_error
-        test_error       = 1.5
-
-        connections = test_neuron.get_connections()
-        #TEST_INPUTS 
-
-        test_inputs      = [[0.4, 2.0], [0.5, 3.0]]
-
-        for connection in test_inputs:
-            summed += connection[0] * connection[1]
-            print "summed = " + str(summed)
-            error_slopes[str(connection)] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * test_inputs[0][0]
-
-        # for neuron in connections:
-        #     weight_and_input[neuron] = [neuron.get_activation(), net.get_connection_weight((neuron, test_neuron))]
-
-        #sum inputs * weights
-        # for connection in test_inputs:
-        #     print "connection = " + str(connection)
-        #     print "connection activation = " + str(connection[0])
-        #     print "connection weight = " + str(connection[1])
-        #     total = connection[0] * connection[1]
-        #     summed += total
-        #     total = 0
-        #     print "summed = " + str(summed)
-        #     print "connection input = " + str(connection[0])
-        #     error_slopes[str(connection)] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * connection[0]
+        outputs = net.get_output_layer()
+        neuron_to_output = {}
+        error_values = []
+        #this is test_target, and assumes two outputs
+        test_target = [1, 0]
         
-        #for each connection neuron, map => {neuron : [input_activation, weight]}
-        # for neuron in connections:
-        #     weight_and_input[neuron] = [neuron.get_activation(), net.get_connection_weight((neuron, test_neuron))]
-
-        # #sum inputs * weights
-        # for connection in weight_and_input:
-        #     total = weight_and_input[connection][0] * weight_and_input[connection][1]
-        #     summed += total
-        #     error_slopes[connection] = -(test_error) * (self.sigmoid(summed) * (1 - self.sigmoid(summed))) * weight_and_input[connection][0]
-        #     total = 0
-        print "error slope = " + str(error_slopes)
+        #map output neurons to activation
+        for key, value in outputs.iteritems():
+            output = value.get_activation()
+            neuron_to_output[net.get_neuron(key).get_name()] = output
+        print neuron_to_output
+        
+        #Get index for each neuron and its activation and get error from corresponding target value (by list index)
+        for unit in neuron_to_output:
+            index  = list(neuron_to_output).index(unit)
+            output = neuron_to_output[unit]
+            error = (test_target[index] - output) * self.derivative(output)
+            error_values.append(error)
 
     def sigmoid(self, input):
         output = 1/(1+(m.pow(2.71828, -input)))
         return output
 
-        #see network
-        #print self.network.get_neurons_by_layer(3)
-
-        #connections = test_neuron.get_connections()
-        # connections = self.network.get_connections()
-     #    for i in connections:
-     #        print (list(i)[0].get_name(), list(i)[1].get_name())
         
 
 
