@@ -26,7 +26,7 @@ class training(object):
     def derivative(self, output):
         return output * (1 - output)
 
-    def get_hidden_w_error(self):
+    def get_output_error(self):
         net = self.network
         outputs = net.get_output_layer()
         neuron_to_output = {}
