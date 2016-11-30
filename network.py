@@ -168,17 +168,16 @@ class network(object):
             print ""
             print "Sameness = " + str(sameness)
 
-    def test_set_input_activation(self):
+    def set_input_activation(self):
         #get input layer
         input_layer = self.get_neurons_by_layer(0)
         for neuron in input_layer:
             activation = random.random()
             neuron.set_activation(activation)
-            print "test activation = " + str(activation)
 
     def sum_inputs(self, neuron):
         #Get inputs
-        total_activation = 0
+        total_activation = float()
         inputs = neuron.get_before_layer()
         #Add all inputs, multiplied by their connection weighting
         for unit in inputs:
