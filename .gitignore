@@ -3,3 +3,4 @@ network.pyc
 unit.pyc
 test.json
 training.pyc
+.DS_Store
