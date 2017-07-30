@@ -1,5 +1,5 @@
 import unit as u
-import random
+import random as r
 
 class network(object):
 
@@ -22,10 +22,11 @@ class network(object):
 
         '''
 
-        self.input_depth  = input_depth
-        self.hidden_depth = hidden_depth
-        self.hidden_width = hidden_width
-        self.output_depth = output_depth
+        self.input_depth   = input_depth
+        self.hidden_depth  = hidden_depth
+        self.hidden_width  = hidden_width
+        self.output_depth  = output_depth
+        self.network_depth = 2 + hidden_width 
         self.all_layers    = {}
         self.input_layer   = {}
         self.hidden_units  = {}
@@ -35,7 +36,7 @@ class network(object):
         self.by_layer      = {}
 
 
-    def make_neurons(self):
+    def make_neurons(self, test=False):
 
         #these should probably be refactored into discrete methods, but bear in mind the counter
 
@@ -67,12 +68,10 @@ class network(object):
         #Add input layer to each neuron
         self.set_all_before_layers()
         #create weights
-        self.create_weights()
+        self.set_random_weights()
 
         return self
 
-
-        
     def get_all_layers(self):
          return self.all_layers
 
@@ -104,7 +103,23 @@ class network(object):
 
     def initialize_weights(self):
         for key, weight in self.connections.iteritems():
-            self.connections[key] = random.random()
+            self.connections[key] = r.uniform(0.0, 1.0)
+
+    def initialize_test_weights(self):
+
+        test_set = {
+            (0,2) : 0.9,
+            (0,3) : 0.2,
+            (1,2) : 0.3,
+            (1,3) : 0.8
+        }
+
+        for key, weight in self.connections.iteritems():
+            
+            neuron0name = key[0].get_name()
+            neuron1name = key[1].get_name()
+
+            self.connections[key] = test_set[(neuron0name, neuron1name)]
 
     def get_connection_weight(self, pair):
         #Gets connection weight from tuple of (before_unit, current_unit)
@@ -120,7 +135,7 @@ class network(object):
                 this_layer.append(self.all_layers[neuron])
         return this_layer
 
-    def create_weights(self):
+    def set_zero_weights(self):
         for neuron in self.all_layers:
             if self.all_layers[neuron].get_layer() > 0:
                 layer         = self.all_layers[neuron].get_layer()
@@ -129,7 +144,20 @@ class network(object):
 
             #iterate through before layer and create connections
                 for before_unit in inputs:
-                    self.connections[before_unit, self.all_layers[neuron]] = random.random()
+                    self.connections[before_unit, self.all_layers[neuron]] = 0
+            #add connections to unit property
+                    self.all_layers[neuron].add_connection(before_unit)
+
+    def set_random_weights(self):
+        for neuron in self.all_layers:
+            if self.all_layers[neuron].get_layer() > 0:
+                layer         = self.all_layers[neuron].get_layer()
+                current_layer = self.get_neurons_by_layer(layer)
+                inputs        = self.get_neurons_by_layer(layer - 1)
+
+            #iterate through before layer and create connections
+                for before_unit in inputs:
+                    self.connections[before_unit, self.all_layers[neuron]] = r.uniform(0.0, 1.0)
             #add connections to unit property
                     self.all_layers[neuron].add_connection(before_unit)
 
@@ -140,6 +168,7 @@ class network(object):
         for neuron in network:
             if network[neuron].get_layer() > 0:
                 current_unit = network[neuron]
+                print "Current unit = " + str(network[neuron].get_name())
                 self.sum_inputs(current_unit)
 
     def set_all_before_layers(self):
@@ -172,17 +201,25 @@ class network(object):
         #get input layer
         input_layer = self.get_neurons_by_layer(0)
         for neuron in input_layer:
-            activation = random.random()
+            activation = r.random()
             neuron.set_activation(activation)
 
     def sum_inputs(self, neuron):
         #Get inputs
         total_activation = float()
-        inputs = neuron.get_before_layer()
-        #Add all inputs, multiplied by their connection weighting
-        for unit in inputs:
-            for connection in inputs:
-                total_activation += (unit.get_activation() * self.get_connection_weight((unit, neuron)))
+        #inputs = neuron.get_before_layer()
+
+        print "Current neuron is: "
+        print neuron.get_name()
+        print "Current neuron connections: "
+        print neuron.get_connections()
+        connections = neuron.get_connections()
+
+        for input_unit in connections:
+            current_weight    = self.get_connection_weight((input_unit, neuron))
+            input_activation  = input_unit.get_activation()
+            total_activation += (current_weight * input_activation)
+
         output = neuron.sigmoid(total_activation)
         neuron.set_activation(output)
 
