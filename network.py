@@ -103,7 +103,7 @@ class network(object):
 
     def initialize_weights(self):
         for key, weight in self.connections.iteritems():
-            self.connections[key] = r.uniform(0.0, 1.0)
+            self.connections[key] = r.uniform(-1.0, 1.0)
 
     def initialize_test_weights(self):
 
@@ -157,7 +157,7 @@ class network(object):
 
             #iterate through before layer and create connections
                 for before_unit in inputs:
-                    self.connections[before_unit, self.all_layers[neuron]] = r.uniform(0.0, 1.0)
+                    self.connections[before_unit, self.all_layers[neuron]] = r.uniform(-1.0, 1.0)
             #add connections to unit property
                     self.all_layers[neuron].add_connection(before_unit)
 
