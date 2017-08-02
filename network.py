@@ -168,7 +168,7 @@ class network(object):
         for neuron in network:
             if network[neuron].get_layer() > 0:
                 current_unit = network[neuron]
-                print "Current unit = " + str(network[neuron].get_name())
+                #print "Current unit = " + str(network[neuron].get_name())
                 self.sum_inputs(current_unit)
 
     def set_all_before_layers(self):
@@ -209,10 +209,10 @@ class network(object):
         total_activation = float()
         #inputs = neuron.get_before_layer()
 
-        print "Current neuron is: "
-        print neuron.get_name()
-        print "Current neuron connections: "
-        print neuron.get_connections()
+        # print "Current neuron is: "
+        # print neuron.get_name()
+        # print "Current neuron connections: "
+        # print neuron.get_connections()
         connections = neuron.get_connections()
 
         for input_unit in connections:
