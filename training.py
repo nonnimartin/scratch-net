@@ -1,5 +1,3 @@
-import math as m
-
 class training(object):
 
     def __init__(self, network, target_out):
