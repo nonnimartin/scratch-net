@@ -7,7 +7,6 @@ class training(object):
         self.final_layer_to_target = {}
         self.outputs_to_error      = {}
 
-
     def backpropagate_error(self):
 
         #assign errors first to output layer, and then to earlier layers
@@ -24,14 +23,14 @@ class training(object):
             current_neuron_layer     = current_neuron.get_layer()
 
             if current_neuron_layer == output_layer_num:
+                #Calculate error on the output layer
                 target_value = local_target_values[0]
                 output       = current_neuron.get_activation()
                 error        = target_value - output
                 current_neuron.set_error(error)
-                print "error = " + str(error)
             else:
-                pass
-
+                links = current_neuron.get_connections()
+                
     def get_output_layer(self):
 
         outputs = self.network.get_output_layer()

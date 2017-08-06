@@ -49,6 +49,9 @@ class neuron(object):
     def set_error(self, error):
         self.error = error
 
+    def get_error(self):
+        return self.error
+
     def sigmoid(self, input):
         output = 1/(1+(m.pow(2.71828, -input)))
         return output
