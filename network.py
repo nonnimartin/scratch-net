@@ -26,7 +26,7 @@ class network(object):
         self.hidden_depth  = hidden_depth
         self.hidden_width  = hidden_width
         self.output_depth  = output_depth
-        self.network_depth = 2 + hidden_width 
+        self.network_width = 2 + hidden_width 
         self.all_layers    = {}
         self.input_layer   = {}
         self.hidden_units  = {}
@@ -74,6 +74,9 @@ class network(object):
 
     def get_all_layers(self):
          return self.all_layers
+
+    def get_network_width(self):
+        return self.network_width
 
     def set_by_layers(self):
         #maps neurons to layers in the following format {layer0: [neuron0, neuron1, neuron2], layer1: [etc...]}

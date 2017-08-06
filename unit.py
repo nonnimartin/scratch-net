@@ -11,6 +11,7 @@ class neuron(object):
         self.before_layer_names = []
         self.connections        = []
         self.connections_names  = []
+        self.error              = float()
 
     def set_before_layer(self, layer):
         self.before_layer = layer
@@ -44,6 +45,9 @@ class neuron(object):
 
     def get_before_layer_names(self):
         return self.before_layer_names
+
+    def set_error(self, error):
+        self.error = error
 
     def sigmoid(self, input):
         output = 1/(1+(m.pow(2.71828, -input)))
