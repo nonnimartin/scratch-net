@@ -68,6 +68,7 @@ class training(object):
                         print "computer before error" + " = " + str(computed_before_error)
                         #map before neuron to its future error value for later use
                     new_error_map[before_neuron.get_name()] = computed_before_error
+                    before_neuron.set_error(computed_before_error)
 
 
             current_layer -= 1
