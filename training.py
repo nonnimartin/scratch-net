@@ -62,6 +62,7 @@ class training(object):
                         loop_weights_list.append(loop_weight)
                         print "test weights list for " + str(sum_before.get_name()) + " is " + str(loop_weights_list)
                         #take current weight and divide by sum error of all other current layer weights
+                        #this ends up causing problems if the sum = 0
                         divided_weight        = current_weight/sum(loop_weights_list)
                         #multiply divided weight by after_neuron's error
                         computed_before_error = after_error * divided_weight
