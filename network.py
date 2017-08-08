@@ -102,7 +102,7 @@ class network(object):
          return self.output_layer
 
     def set_connection_weight(self, before_unit, current_unit, weight):
-        self.connections[before_unit, current_unit] = value
+        self.connections[before_unit, current_unit] = weight
 
     def initialize_weights(self):
         for key, weight in self.connections.iteritems():

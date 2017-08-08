@@ -79,11 +79,12 @@ class training(object):
     def adjust_weights(self):
         #adjust connection weights after backpropagation in each learning epoch
         
-        net            = self.network
+        net                            = self.network
         #Learning rate will have to be adjusted/adjustable to avoid over-correction on learning
-        learning_rate  = 0.1
+        learning_rate                  = 0.1
         #get network connections as tuple pairs
-        connections    = net.get_connections()
+        connections                    = net.get_connections()
+        map_connections_to_adjustments = {}
 
         for connection in connections:
             before_neuron          = connection[0]
@@ -98,6 +99,17 @@ class training(object):
             
             adjustment_value       = -(sig_weights * (1 - sig_weights) * before_activation)
             #print "adjustment for " + str(before_name) + "-" + str(after_name) + " = " + str(adjustment_value)
+
+            #map connections tuples to adjustment values
+            map_connections_to_adjustments[connection] = adjustment_value
+        
+        #adjust values from map to avoid altering during calculation
+        for key, value in map_connections_to_adjustments.iteritems():
+            before_neuron                  = key[0]
+            after_neuron                   = key[1]
+            current_connection_weight      = net.get_connection_weight(key)
+            updated_weight                 = current_connection_weight + value
+            net.set_connection_weight(before_neuron, after_neuron, updated_weight)
                 
     def get_output_layer(self):
 
