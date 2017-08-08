@@ -1,3 +1,5 @@
+import math as m
+
 class training(object):
 
     def __init__(self, network, target_out):
@@ -6,6 +8,7 @@ class training(object):
         self.target_out            = target_out
         self.final_layer_to_target = {}
         self.outputs_to_error      = {}
+        self.current_weights_map   = {}
 
     def backpropagate_error(self):
         
@@ -21,6 +24,7 @@ class training(object):
         map_layer_to_targets  = {}
         #map neurons to future (post-all-calculation) error results
         new_error_map         = {}
+        current_weights_map   = {}
 
         #map to preserve order in targets and output layer
         for neuron in final_layer:
@@ -45,8 +49,6 @@ class training(object):
                 before_layer      = after_neuron.get_before_layer()
                 #get all the weights in the before layer and compute the sum of this weight/(the sum of the weights)
                 for before_neuron in before_layer:
-                    print "after - " + str(after_neuron.get_name())
-                    print "before - " + str(before_neuron.get_name())
                     after_error        = after_neuron.get_error()
                     after_neuron_name  = after_neuron.get_name()
                     before_neuron_name = before_neuron.get_name()
@@ -56,39 +58,46 @@ class training(object):
                     loop_weights_list = []
                 #loop again through weight tuples to store the weights for each calculation of prior error
                     for sum_before in before_layer:
-                        print "sum before = " + str(sum_before.get_name())
                         loop_tuple     = (sum_before, after_neuron)
                         loop_weight    = net.get_connection_weight(loop_tuple)
                         loop_weights_list.append(loop_weight)
-                        print "test weights list for " + str(sum_before.get_name()) + " is " + str(loop_weights_list)
                         #take current weight and divide by sum error of all other current layer weights
                         #this ends up causing problems if the sum = 0
-                        divided_weight        = current_weight/sum(loop_weights_list)
+                        weights_sum           = sum(loop_weights_list)
+                        divided_weight        = current_weight/weights_sum
                         #multiply divided weight by after_neuron's error
                         computed_before_error = after_error * divided_weight
-                        print "computer before error" + " = " + str(computed_before_error)
                         #map before neuron to its future error value for later use
-                    new_error_map[before_neuron.get_name()] = computed_before_error
+                    current_weights_map[before_neuron.get_name()] = weights_sum
+                    new_error_map[before_neuron.get_name()]       = computed_before_error
                     before_neuron.set_error(computed_before_error)
 
-
             current_layer -= 1
+        #Set current error map for use in weight adjustment (see adjust weights)
+        self.current_weights_map = current_weights_map
 
+    def adjust_weights(self):
+        #adjust connection weights after backpropagation in each learning epoch
+        
+        net            = self.network
+        #Learning rate will have to be adjusted/adjustable to avoid over-correction on learning
+        learning_rate  = 0.1
+        #get network connections as tuple pairs
+        connections    = net.get_connections()
 
-            print "map = " + str(new_error_map)
-            # for connection_pair in connections:
-            #     before_neuron = connection_pair[0]
-            #     after_neuron  = connection_pair[1]
-
-
-                # if current_neuron_layer == output_layer_num:
-                #     #Calculate error on the output layer
-                #     target_value = local_target_values[0]
-                #     output       = current_neuron.get_activation()
-                #     error        = target_value - output
-                #     current_neuron.set_error(error)
-                # else:
-                #     links = current_neuron.get_connections()
+        for connection in connections:
+            before_neuron          = connection[0]
+            before_name            = before_neuron.get_name()
+            after_neuron           = connection[1]
+            after_name             = after_neuron.get_name()
+            current_weights_map    = self.current_weights_map
+            #current sum of all weights in the layer sum (see backpropagation)
+            current_before_weights = current_weights_map[before_name]
+            before_activation      = before_neuron.get_activation()
+            sig_weights            = self.sigmoid(current_before_weights)
+            
+            adjustment_value       = -(sig_weights * (1 - sig_weights) * before_activation)
+            #print "adjustment for " + str(before_name) + "-" + str(after_name) + " = " + str(adjustment_value)
                 
     def get_output_layer(self):
 
@@ -122,10 +131,15 @@ class training(object):
             for target in range(len(targets)):
                 self.final_layer_to_target[ordered_name_list[target]] = targets[target]
 
+    def sigmoid(self, input):
+        output = 1/(1+(m.pow(2.71828, -input)))
+        return output
+
     def main(self):
         self.map_final_layer_to_target()
         self.map_outputs_to_error()
         self.backpropagate_error()
+        self.adjust_weights()
 
 
 if __name__ == "__main__":
